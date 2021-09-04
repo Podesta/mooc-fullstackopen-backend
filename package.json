@@ -1,0 +1,19 @@
+{
+  "name": "fullstackopen-phonebook-backend",
+  "version": "0.0.1",
+  "description": "Backend server for the Phonebook exercise from the Fullstack Open Mooc, from the University of Helsinki.",
+  "main": "index.jsx",
+  "scripts": {
+    "start": "node index.jsx",
+    "dev": "nodemon index.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Podesta",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
