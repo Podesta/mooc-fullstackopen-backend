@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 app.get('/info', (request, response) => {
   const date = new Date();
   const entries = persons.length;
@@ -30,6 +32,30 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(person => person.id !== id);
 
   response.status(204).end();
+});
+
+const generateId = () => Math.floor(Math.random() * 10000000 + 1);
+app.post('/api/persons', (request, response) => {
+  const person = request.body;
+  person.id = generateId();
+
+  if (!person.name) {
+    return response.status(400).json({
+      error: 'Person must have a name field'
+    });
+  } else if (!person.number) {
+    return response.status(400).json({
+      error: 'Number must have a name field'
+    });
+  } else if (persons.find(p => p.name === person.name)) {
+    return response.status(400).json({
+      error: 'Name must be unique'
+    });
+  }
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 let persons = [
