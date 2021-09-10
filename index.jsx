@@ -19,6 +19,7 @@ morgan.token('body', (req, res) => req.method == 'POST' ? JSON.stringify(req.bod
 app.use(express.json());
 app.use(requestLogger);
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(express.static('build'));
 
 app.get('/info', (request, response) => {
   const date = new Date();
