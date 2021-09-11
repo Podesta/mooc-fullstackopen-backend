@@ -7,7 +7,10 @@
     "start": "node index.jsx",
     "dev": "nodemon index.jsx",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "logs": "heroku logs --tail"
+    "logs": "heroku logs --tail",
+    "build:ui": "rm -rf build && cd ../mooc-fullstackopen/part-02/phonebook && npm run build && mv build ../../../fullstackopen-phonebook-backend/",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
   },
   "author": "Podesta",
   "license": "GPL-3.0",
