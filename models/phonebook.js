@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 const url = process.env.MONGODB_URI;
 
-mongoose.connect(url);
+mongoose.connect(url).then(result => {
+  console.log(`Connected to mongoose DB`);
+});
 
 const personSchema = mongoose.Schema({
   name: String,
