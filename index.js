@@ -5,6 +5,7 @@ const Person = require('./models/phonebook');
 
 const app = express();
 
+/*
 const requestLogger = (req, res, next) => {
   console.log('Method:', req.method)
   console.log('Path:  ', req.path)
@@ -12,16 +13,13 @@ const requestLogger = (req, res, next) => {
   console.log('---')
   next()
 }
-
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: 'unknown endpoint' })
-}
+*/
 
 morgan.token('body', (req, res) => req.method == 'POST' ? JSON.stringify(req.body) : '');
-app.use(express.json());
-app.use(requestLogger);
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 app.use(express.static('build'));
+app.use(express.json());
+//app.use(requestLogger);
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/info', (req, res) => {
   const date = new Date();
@@ -49,12 +47,13 @@ app.get('/api/persons/:id', (req, res) => {
   });
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
   Person.findByIdAndDelete(id).then(person => {
-    console.log(`${person.name} removed`);
+    console.log(`${id} removed`);
     res.status(204).end();
-  });
+  })
+    .catch(error => next(error));
 });
 
 const generateId = () => Math.floor(Math.random() * 10000000 + 1);
@@ -94,7 +93,22 @@ app.post('/api/persons', (req, res) => {
   });
 });
 
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+
+const errorHandler = (error, req , res, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+}
+
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
