@@ -56,7 +56,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-const generateId = () => Math.floor(Math.random() * 10000000 + 1);
 app.post('/api/persons', (req, res) => {
   const body = req.body;
 
@@ -91,6 +90,25 @@ app.post('/api/persons', (req, res) => {
       });
     }
   });
+});
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = req.params.id;
+  const body = req.body;
+  
+  const person = ({
+    name: body.name,
+    phone: body.phone,
+  });
+
+  Person.findByIdAndUpdate(id, person, { new: true })
+    .then(returnedPerson => {
+      if (!returnedPerson) {
+        return res.status(404).send({ error: 'person with id not found' });
+      }
+      res.json(returnedPerson);
+    })
+    .catch(error => next(error));
 });
 
 const unknownEndpoint = (req, res) => {
