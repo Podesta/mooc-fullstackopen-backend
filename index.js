@@ -21,30 +21,33 @@ app.use(express.json());
 //app.use(requestLogger);
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   const date = new Date();
-  const entries = persons.length;
-  res.send(
-    `<p>Phonebook has info for ${entries} people</p>
+  Person.estimatedDocumentCount().then(entries => {
+    res.send(
+      `<p>Phonebook has info for ${entries} people</p>
      <p>${date}</p>`
-  );
+    );
+  })
+    .catch(error => next(error));
 });
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({}).then(persons => {
     res.json(persons);
-  });
+  })
+    .catch(error => next(error));
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
   Person.findById(id).then(person => {
+    if (!person) {
+      return res.status(404).send({ error: 'id not found' });
+    }
     res.json(person);
   })
-    .catch((error) => {
-      console.log(error.message);
-      res.status(404).end();
-  });
+    .catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -56,7 +59,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
 
@@ -68,9 +71,6 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({
       error: 'Person must have a phone field'
     });
-  } else if (Person.exists({ name: body.name })) {
-    console.log('found');
-    console.log(body.name);
   }
 
   const newPerson = new Person({
@@ -80,16 +80,15 @@ app.post('/api/persons', (req, res) => {
 
   Person.exists({ name: body.name }).then(found => {
     if (found) {
-      return res.status(400).json({
-        error: 'Name must be unique'
-      });
+      return res.status(400).json({ error: 'Name must be unique' });
     } else if (!found) {
       newPerson.save().then(savedPerson => {
         console.log(`${savedPerson.name} added to DB`);
         res.json(savedPerson);
       });
     }
-  });
+  })
+    .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -104,7 +103,7 @@ app.put('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndUpdate(id, person, { new: true })
     .then(returnedPerson => {
       if (!returnedPerson) {
-        return res.status(404).send({ error: 'person with id not found' });
+        return res.status(404).send({ error: 'id not found' });
       }
       res.json(returnedPerson);
     })
