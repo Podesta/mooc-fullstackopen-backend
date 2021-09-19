@@ -19,6 +19,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.7",
+    "mongoose-unique-validator": "github:blakehaswell/mongoose-unique-validator#pull/128/head",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
