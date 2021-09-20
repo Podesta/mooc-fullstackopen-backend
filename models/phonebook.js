@@ -3,17 +3,27 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const url = process.env.MONGODB_URI;
 
-mongoose.connect(url).then(result => {
-  console.log(`Connected to mongoose DB`);
-});
+mongoose.connect(url)
+  .then(result => {
+    console.log(`Connected to MongoDB`);
+  })
+  .catch(error => {
+    console.log('error connecting to MongoDB:', error.message);
+  });
+
 
 const personSchema = mongoose.Schema({
   name: {
     type: String,
+    minLength: 3,
     required: true,
     unique: true,
   },
-  phone: String,
+  phone: {
+    type: String,
+    required: true,
+    minLength: 8,
+  }
 });
 
 personSchema.plugin(uniqueValidator);

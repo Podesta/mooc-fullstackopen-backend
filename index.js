@@ -94,7 +94,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     phone: body.phone,
   });
 
-  Person.findByIdAndUpdate(id, person, { new: true })
+  Person.findByIdAndUpdate(id, person, { new: true, runValidators: true })
     .then(returnedPerson => {
       if (!returnedPerson) {
         return res.status(404).send({ error: 'id not found' });
