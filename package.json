@@ -2,10 +2,10 @@
   "name": "fullstackopen-phonebook-backend",
   "version": "0.0.1",
   "description": "Backend server for the Phonebook exercise from the Fullstack Open Mooc, from the University of Helsinki.",
-  "main": "index.jsx",
+  "main": "index.js",
   "scripts": {
-    "start": "node index.jsx",
-    "dev": "nodemon index.jsx",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "logs": "heroku logs --tail",
     "build:ui": "rm -rf build && cd ../mooc-fullstackopen/part-02/phonebook && npm run build && mv build ../../../fullstackopen-phonebook-backend/",
