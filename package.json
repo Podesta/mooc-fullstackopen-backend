@@ -2,6 +2,9 @@
   "name": "fullstackopen-phonebook-backend",
   "version": "0.0.1",
   "description": "Backend server for the Phonebook exercise from the Fullstack Open Mooc, from the University of Helsinki.",
+  "engines": {
+    "node": "16.x"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
