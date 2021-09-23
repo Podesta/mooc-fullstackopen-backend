@@ -10,7 +10,8 @@
     "logs": "heroku logs --tail",
     "build:ui": "rm -rf build && cd ../mooc-fullstackopen/part-02/phonebook && npm run build && mv build ../../../fullstackopen-phonebook-backend/",
     "deploy": "git push heroku master",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
+    "lint": "eslint ."
   },
   "author": "Podesta",
   "license": "GPL-3.0",
@@ -23,6 +24,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.32.0",
     "nodemon": "^2.0.12"
   }
 }
